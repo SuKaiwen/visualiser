@@ -10,16 +10,21 @@ import './CSS/Global.css';
 
 function App() {
   return (
-    <div className = "page-container">
-      <h1>Visualiser</h1>
-      <p>Bringing complex algorithms to life</p>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home/>} />
-          <Route path="/longest-inc" element={<LongestIncSubseq/>} />
-        </Routes>
-    </Router>
+    <div>
+      <div className = "row header">
+        <p>VISUALISER</p>
+        <p id="tagline">Bringing complex algorithms to life</p>
+      </div>
+      <div className = "page-container">
+        <Router>
+          <Routes>
+            <Route path="/" element={<LongestIncSubseq/>} />
+            <Route path="/longest-inc" element={<LongestIncSubseq/>} />
+          </Routes>
+      </Router>
+      </div>
     </div>
+    
   );
 }
 

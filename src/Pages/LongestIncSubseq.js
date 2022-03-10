@@ -20,6 +20,9 @@ function LongestIncSubseq(props) {
     // Steps
     const [steps, setSteps] = useState([]);
 
+    // Variable to stop users from entering numbers when algorithm has started
+    const [started, setStarted] = useState(false);
+
     useEffect(() => {
         return;
     }, [lisArray])
@@ -42,6 +45,9 @@ function LongestIncSubseq(props) {
 
     // Adds the user input number to the array
     function addNumber() {
+        if(started){
+            return;
+        }
 
         // Restrictions in case people enter too many numbers
         if(numArr.length >= ARRAY_MAX_LENGTH){
@@ -73,6 +79,7 @@ function LongestIncSubseq(props) {
     // LONGEST INC SUBSEQUENCE FORMULA
     // O(n^2) time...
     function findLIS() {
+        setStarted(true);
         var LIS = [];
 
         // Populate the Array
@@ -131,7 +138,7 @@ function LongestIncSubseq(props) {
                     }
                 }
                 console.log("done");
-            }, i * timeout * 150);
+            }, i * timeout * 100);
         }
 
         console.log(steps);
@@ -171,9 +178,9 @@ function LongestIncSubseq(props) {
                     }else{
                         squares[i].style.backgroundColor = "white";
                     }
-                }, i * timeout * 150);
+                }, i * timeout * 100);
             }
-        }, steps.length * timeout * 150);
+        }, steps.length * timeout * 100);
 
         console.log(incSubSeq);
     }
@@ -194,7 +201,7 @@ function LongestIncSubseq(props) {
                     therefore the length is 4.
                 </p>
                 <h2>Enter a Number</h2>
-                <p>Note: the number must be less than 1,000,000 and must be integer. If floating number is entered the function will use parseInt to convert to integer. Maximum of 12 numbers allowed</p>
+                <p>Note: the number must be less than 1,000,000 and must be integer. If floating number is entered the function will use parseInt to convert to integer. Maximum of 12 numbers allowed.</p>
                 <p>Current num is {currNum}</p>
                 <div className = "row">
                     <input id = "number-form" onChange = {e => filterInput(e.target.value)}></input>
@@ -202,7 +209,11 @@ function LongestIncSubseq(props) {
                         addNumber();
                         document.getElementById('number-form').value = "";
                     }}>SUBMIT</button>
-                    <button className = "btn danger" onClick={ () => {setNumArr([]); setLisArray([])}}>RESET</button>
+                    <button className = "btn danger" onClick={ () => {
+                        setNumArr([]); 
+                        setLisArray([]); 
+                        setStarted(false)
+                    }}>RESET</button>
                 </div>
             </div>
             <h2>Your Array</h2>
@@ -228,8 +239,9 @@ function LongestIncSubseq(props) {
             }
                 
             <button className = "btn" onClick={() => findLIS()}>SOLVE</button>
-            <p>Key: ORANGE = comparing the  | GREEN = part of longest subsequence</p>
+            <p>Key: ORANGE = comparing the numbers in DP Array | GREEN = member of longest subsequence</p>
             <p>Max Increasing Subsequence Length is: {lisArr}</p>
+            <p>Made by Kevin Su</p>
         </div>
     );
 }

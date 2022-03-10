@@ -19,6 +19,20 @@ Link, a {
     color: inherit;
 }
 
+.header {
+    align-items: center;
+    justify-content: space-between;
+    background-color: #1f1f1f;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 10%;
+    color: orange
+}
+
+.header p {
+    font-size: 15px;
+}
+
 /* Components */
 .btn {
     padding: 5px 20px;
@@ -44,9 +58,24 @@ Link, a {
     padding: 20px;
     border: 1px solid black;
     width: 300px !important;
+    margin-bottom: 10px;
 }
 
 input {
     margin-right: 10px;
     height: 40px;
+}
+
+@media (width < 768px) {
+    .col-50 {
+        width: 100%;
+    }
+
+    .page-container {
+        padding: 0 5%;
+    }
+
+    #tagline {
+        display: none;
+    }
 }

@@ -8,7 +8,10 @@ function LongestIncSubseq(props) {
     // Array that the user submits
     const [numArr, setNumArr] = useState([]);
 
-    // LIS array
+    // LIS arr
+    const [lisArray, setLisArray] = useState([]);
+
+    // LIS array max number
     const [lisArr, setLisArr] = useState(0);
 
     // Number that the user enters
@@ -17,10 +20,14 @@ function LongestIncSubseq(props) {
     // Steps
     const [steps, setSteps] = useState([]);
 
+    useEffect(() => {
+        return;
+    }, [lisArray])
+
     // Filters the input to make sure the user is typing a number and other checks
     function filterInput(userInput) {
         
-        // Restrict size incase user enters a large number
+        // Restrict size incase user enters a large number causing overflow
         if(userInput.length > 7){
             return;
         }
@@ -52,10 +59,15 @@ function LongestIncSubseq(props) {
             value: currNum,
             color: "white"
         });
-
         setNumArr(tempArr);
+
+        // Update the LIS array
+        let tempLIS = lisArray;
+        tempLIS.push(1);
+        setLisArray(tempLIS);
+
+        // Reset current number
         setCurrNum();
-        console.log(numArr);
     }
 
     // LONGEST INC SUBSEQUENCE FORMULA
@@ -71,17 +83,19 @@ function LongestIncSubseq(props) {
         // Reverse iteration of the number array
         for(let i = numArr.length-1; i >= 0; i--){
             for(let j = i+1; j < numArr.length; j++){
-                // Add onto the step visualiser...
-                // Change color of the numbers...
-                let tempSteps = steps;
-                tempSteps.push([i, j]);
-                setSteps(tempSteps);
+                
 
                 // If the current element is greater than the previous element, 
                 // we can safely add 1 to the value of previous max sum
                 if(numArr[i].value < numArr[j].value){
                     LIS[i] = Math.max(LIS[i], 1+LIS[j]);
                 }
+
+                // Add onto the step visualiser...
+                // Change color of the numbers...
+                let tempSteps = steps;
+                tempSteps.push([i, j, LIS[i]]);
+                setSteps(tempSteps);
             }
         }
 
@@ -98,18 +112,29 @@ function LongestIncSubseq(props) {
         for(let i = 0; i < steps.length; i++){
             setTimeout(() => {
                 const squares = document.getElementsByClassName('number-sq');
+                const lisSquares = document.getElementsByClassName('lis-sq');
                 for(let k = 0; k < numArr.length; k++){
+                    if(k == steps[i][0]){
+                        // Update LIS
+                        // Cheap way to update array on the frontend...
+                        let tempLis = lisArray;
+                        tempLis.splice(k, 1, steps[i][2]);
+                        setLisArray([]);
+                        setLisArray(tempLis);
+                    }
                     if(k == steps[i][0] || k == steps[i][1]){
                         squares[k].style.backgroundColor = "orange";
+                        lisSquares[k].style.backgroundColor = "orange";
                     }else{
-                        squares[k].style.backgroundColor = "white";
+                        squares[k].style.backgroundColor = "white"
+                        lisSquares[k].style.backgroundColor = "white";
                     }
                 }
                 console.log("done");
             }, i * timeout * 150);
         }
 
-        console.log(LIS);
+        console.log(steps);
 
         // Find MAX LIS
         let maxIndex = 0;
@@ -177,23 +202,34 @@ function LongestIncSubseq(props) {
                         addNumber();
                         document.getElementById('number-form').value = "";
                     }}>SUBMIT</button>
-                    <button className = "btn danger" onClick={ () => setNumArr([])}>RESET</button>
+                    <button className = "btn danger" onClick={ () => {setNumArr([]); setLisArray([])}}>RESET</button>
                 </div>
-                <h2>Your Array</h2>
-                {numArr.length > 0 &&
-                    <div className = "row">
-                    {numArr.map(numberX => {return (
-                        <div className = "number-sq">
-                            <p>{numberX.value}</p>
-                        </div>
-                    )})} 
-                    </div>
-                }
-                
-                <button className = "btn" onClick={() => findLIS()}>SOLVE</button>
-                <p>Key: ORANGE = comparing the numbers | GREEN = part of longest subsequence</p>
-                <p>Max Increasing Subsequence Length is: {lisArr}</p>
             </div>
+            <h2>Your Array</h2>
+            {numArr.length > 0 &&
+                <div className = "row">
+                {numArr.map(numberX => {return (
+                    <div className = "number-sq">
+                        <p>{numberX.value}</p>
+                    </div>
+                )})} 
+                </div>
+            }
+
+            <h2>Dynamic Programming LIS Array</h2>
+            {lisArray.length > 0 &&
+                <div className = "row">
+                {lisArray.map(lisNum => {return (
+                    <div className = "lis-sq">
+                        <p>{lisNum}</p>
+                    </div>
+                )})} 
+                </div>
+            }
+                
+            <button className = "btn" onClick={() => findLIS()}>SOLVE</button>
+            <p>Key: ORANGE = comparing the  | GREEN = part of longest subsequence</p>
+            <p>Max Increasing Subsequence Length is: {lisArr}</p>
         </div>
     );
 }

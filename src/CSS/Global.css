@@ -26,7 +26,7 @@ Link, a {
     border: none;
     border-radius: 8px;
     background-color: orange;
-    margin-left: 20px;
+    margin-right: 10px;
 }
 
 .danger {
@@ -37,4 +37,16 @@ Link, a {
 .number-sq {
     padding: 20px;
     border: 1px solid black;
+    width: 300px !important;
+}
+
+.lis-sq {
+    padding: 20px;
+    border: 1px solid black;
+    width: 300px !important;
+}
+
+input {
+    margin-right: 10px;
+    height: 40px;
 }

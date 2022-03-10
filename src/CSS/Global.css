@@ -1,0 +1,40 @@
+.page-container {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 10%;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+}
+
+.col-50 {
+    width: 50%;
+}
+
+Link, a {
+    text-decoration: none !important;
+    color: inherit;
+}
+
+/* Components */
+.btn {
+    padding: 5px 20px;
+    font-size: 15px;
+    border: none;
+    border-radius: 8px;
+    background-color: orange;
+    margin-left: 20px;
+}
+
+.danger {
+    background-color: red !important;
+    color: white;
+}
+
+.number-sq {
+    padding: 20px;
+    border: 1px solid black;
+}

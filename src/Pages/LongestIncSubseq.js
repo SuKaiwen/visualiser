@@ -8,6 +8,9 @@ function LongestIncSubseq(props) {
     // Array that the user submits
     const [numArr, setNumArr] = useState([]);
 
+    // LIS array
+    const [lisArr, setLisArr] = useState(0);
+
     // Number that the user enters
     const [currNum, setCurrNum] = useState();
 
@@ -48,6 +51,29 @@ function LongestIncSubseq(props) {
         console.log(numArr);
     }
 
+    // LONGEST INC SUBSEQUENCE FORMULA
+    
+    function findLIS() {
+        var LIS = [];
+
+        // Populate the Array
+        for(var i = 0; i < numArr.length; i++){
+            LIS.push(1);
+        }
+
+        // Reverse iteration of the number array
+        for(var i = numArr.length-1; i >= 0; i--){
+            for(var j = i+1; j < numArr.length; j++){
+                if(numArr[i] < numArr[j]){
+                    LIS[i] = Math.max(LIS[i], 1+LIS[j]);
+                }
+            }
+        }
+
+        // Find the max number in the array
+        setLisArr(Math.max(...LIS));
+    }
+
     return (
         <div>
             <div className = "col-50">
@@ -82,6 +108,8 @@ function LongestIncSubseq(props) {
                         </div>
                     )})} 
                 </div>
+                <button className = "btn" onClick={() => findLIS()}>SOLVE</button>
+                <p>Max Increasing Subsequence Length is: {lisArr}</p>
                 
             </div>
             

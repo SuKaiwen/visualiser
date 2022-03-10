@@ -14,6 +14,9 @@ function LongestIncSubseq(props) {
     // Number that the user enters
     const [currNum, setCurrNum] = useState();
 
+    // Steps
+    const [steps, setSteps] = useState([]);
+
     // Filters the input to make sure the user is typing a number and other checks
     function filterInput(userInput) {
         
@@ -45,33 +48,109 @@ function LongestIncSubseq(props) {
 
         // Add the number
         let tempArr = numArr;
-        tempArr.push(currNum);
+        tempArr.push({
+            value: currNum,
+            color: "white"
+        });
+
         setNumArr(tempArr);
         setCurrNum();
         console.log(numArr);
     }
 
     // LONGEST INC SUBSEQUENCE FORMULA
-    
+    // O(n^2) time...
     function findLIS() {
         var LIS = [];
 
         // Populate the Array
-        for(var i = 0; i < numArr.length; i++){
+        for(let i = 0; i < numArr.length; i++){
             LIS.push(1);
         }
 
         // Reverse iteration of the number array
-        for(var i = numArr.length-1; i >= 0; i--){
-            for(var j = i+1; j < numArr.length; j++){
-                if(numArr[i] < numArr[j]){
+        for(let i = numArr.length-1; i >= 0; i--){
+            for(let j = i+1; j < numArr.length; j++){
+                // Add onto the step visualiser...
+                // Change color of the numbers...
+                let tempSteps = steps;
+                tempSteps.push([i, j]);
+                setSteps(tempSteps);
+
+                // If the current element is greater than the previous element, 
+                // we can safely add 1 to the value of previous max sum
+                if(numArr[i].value < numArr[j].value){
                     LIS[i] = Math.max(LIS[i], 1+LIS[j]);
                 }
             }
         }
 
+        // Max steps
+        let maxNumber = Math.max(...LIS);
+
         // Find the max number in the array
-        setLisArr(Math.max(...LIS));
+        setLisArr(maxNumber);
+
+        console.log(steps.length);
+
+        var timeout = 3;
+
+        for(let i = 0; i < steps.length; i++){
+            setTimeout(() => {
+                const squares = document.getElementsByClassName('number-sq');
+                for(let k = 0; k < numArr.length; k++){
+                    if(k == steps[i][0] || k == steps[i][1]){
+                        squares[k].style.backgroundColor = "orange";
+                    }else{
+                        squares[k].style.backgroundColor = "white";
+                    }
+                }
+                console.log("done");
+            }, i * timeout * 150);
+        }
+
+        console.log(LIS);
+
+        // Find MAX LIS
+        let maxIndex = 0;
+        let tempMaxNum = maxNumber-1;
+        let incSubSeq = [];
+        for(let i = 0; i < LIS.length; i++){
+            // Find MAX index
+            if(LIS[i] === maxNumber){
+                maxIndex = i;
+                incSubSeq.push(i);
+                break;
+            }
+        }
+
+        // Find the other steps
+        for(let i = maxIndex; i < LIS.length; i++){
+            if(LIS[i] === tempMaxNum){
+                incSubSeq.push(i);
+                tempMaxNum--;
+                if(tempMaxNum === 0){
+                    break;
+                }
+                continue;
+            }
+        }
+
+        // Nested timeout to ensure that the solution comes after the solving...
+        setTimeout(() => {
+            for(let i = 0; i < numArr.length; i++){
+                setTimeout(() => {
+                    const squares = document.getElementsByClassName('number-sq');
+                    if(incSubSeq.includes(i)){
+                        squares[i].style.backgroundColor = "green";
+                    }else{
+                        squares[i].style.backgroundColor = "white";
+                    }
+                }, i * timeout * 150);
+            }
+        }, steps.length * timeout * 150);
+
+        console.log(incSubSeq);
     }
 
     return (
@@ -101,18 +180,20 @@ function LongestIncSubseq(props) {
                     <button className = "btn danger" onClick={ () => setNumArr([])}>RESET</button>
                 </div>
                 <h2>Your Array</h2>
-                <div className = "row">
+                {numArr.length > 0 &&
+                    <div className = "row">
                     {numArr.map(numberX => {return (
                         <div className = "number-sq">
-                            <p>{numberX}</p>
+                            <p>{numberX.value}</p>
                         </div>
                     )})} 
-                </div>
-                <button className = "btn" onClick={() => findLIS()}>SOLVE</button>
-                <p>Max Increasing Subsequence Length is: {lisArr}</p>
+                    </div>
+                }
                 
+                <button className = "btn" onClick={() => findLIS()}>SOLVE</button>
+                <p>Key: ORANGE = comparing the numbers | GREEN = part of longest subsequence</p>
+                <p>Max Increasing Subsequence Length is: {lisArr}</p>
             </div>
-            
         </div>
     );
 }

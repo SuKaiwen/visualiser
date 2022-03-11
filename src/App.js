@@ -13,7 +13,7 @@ function App() {
     <div>
       <div className = "row header">
         <p>VISUALISER</p>
-        <p id="tagline">Bringing complex algorithms to life</p>
+        <p id="tagline">Bringing algorithms to life</p>
       </div>
       <div className = "page-container">
         <Router>

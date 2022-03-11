@@ -23,6 +23,8 @@ function LongestIncSubseq(props) {
     // Variable to stop users from entering numbers when algorithm has started
     const [started, setStarted] = useState(false);
 
+    const [ended, setEnded] = useState(false);
+
     useEffect(() => {
         return;
     }, [lisArray])
@@ -180,6 +182,12 @@ function LongestIncSubseq(props) {
                     }
                 }, i * timeout * 100);
             }
+
+            // After EVERY step is done, allow the user to reset...
+            // Prevents resetting in middle of timeout.
+            setTimeout(() => {
+                setEnded(true);
+            }, timeout * 100 * numArr.length);
         }, steps.length * timeout * 100);
 
         console.log(incSubSeq);
@@ -200,20 +208,37 @@ function LongestIncSubseq(props) {
                     Explanation: The longest increasing subsequence is [2,3,7,101], 
                     therefore the length is 4.
                 </p>
+                <h2>The Solution</h2>
+                <p>The Solution involves uses Dynamic Programming completing the task in O(n^2) time. It uses two pointers starting at one from the end (x1) and the end of the number array (x2). It creates
+                    a new array to store the longest increasing subsequence from that index. The pointers steps back comparing the value at x1 to x2 and if x2 > x1 we can safely say that the longest 
+                    increasing subsequence at x1 is 1 + the longest increasing subsequence at x2.
+                </p>
+                <p>Note: this problem is solvable in O(nlogn)
+                    time using the patience sort algorithm which is based on the card game "Patience" (similar to solitare).</p>
                 <h2>Enter a Number</h2>
                 <p>Note: the number must be less than 1,000,000 and must be integer. If floating number is entered the function will use parseInt to convert to integer. Maximum of 12 numbers allowed.</p>
-                <p>Current num is {currNum}</p>
                 <div className = "row">
                     <input id = "number-form" onChange = {e => filterInput(e.target.value)}></input>
-                    <button className = "btn" onClick={ () => {
-                        addNumber();
-                        document.getElementById('number-form').value = "";
-                    }}>SUBMIT</button>
-                    <button className = "btn danger" onClick={ () => {
-                        setNumArr([]); 
-                        setLisArray([]); 
-                        setStarted(false)
-                    }}>RESET</button>
+                    {!started ?
+                        <button className = "btn" onClick={ () => {
+                            addNumber();
+                            document.getElementById('number-form').value = "";
+                        }}>SUBMIT</button>
+                        :
+                        <button className = "btn disabled">SUBMIT</button>   
+                    }
+                    {!(started && !ended) ?
+                        <button className = "btn danger" onClick={ () => {
+                            setNumArr([]); 
+                            setLisArray([]);  
+                            setSteps([]);
+                            setStarted(false);
+                            setEnded(false);
+                        }}>RESET</button>
+                        :
+                        <button className = "btn danger disabled">RESET</button>
+                    }
+                    
                 </div>
             </div>
             <h2>Your Array</h2>
